@@ -40,3 +40,8 @@ Treat scanner results as heuristics, not a full audit. Confirm each finding in c
 - Use `references/spec-summary.md` for extracted规范要点 and manual review checklist.
 - Use the original 2026 documents when a rule is ambiguous or the work requires exact wording.
 
+## Claude Code Compatibility
+
+- Use `CLAUDE.md` as the Claude Code project instruction entry point.
+- Use `.claude/commands/tower-compliance.md` as a Claude Code slash-command style workflow for scanning, triage, and safe fixes.
+- Keep `agents/openai.yaml` for Codex/OpenAI clients; Claude Code can ignore it.
