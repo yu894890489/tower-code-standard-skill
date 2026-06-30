@@ -1,0 +1,8 @@
+interface:
+  display_name: "China Tower IT Compliance"
+  short_description: "Check and fix China Tower 2026 software compliance issues"
+  default_prompt: "Use $tower-it-compliance to review this project against China Tower 2026 IT software development规范 and fix high-risk findings."
+
+policy:
+  allow_implicit_invocation: true
+
