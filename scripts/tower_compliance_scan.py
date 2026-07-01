@@ -55,6 +55,7 @@ class Rule:
     message: str
     pattern: re.Pattern[str]
     suffixes: set[str] | None = None
+    path_pattern: re.Pattern[str] | None = None
 
 
 @dataclass(frozen=True)
@@ -98,6 +99,7 @@ RULES = [
         "MyBatis `${}` 存在注入风险；除受控白名单排序/表名外应改为 `#{}`。",
         re.compile(r"\$\{[^}]+}"),
         {".xml"},
+        re.compile(r"(?i)(^|[\\/])(mapper|mappers)[\\/].*\.xml$|mapper\.xml$"),
     ),
     Rule(
         "SEC005",
@@ -204,6 +206,7 @@ def scan_file(path: Path, root: Path) -> list[Finding]:
     findings: list[Finding] = []
     suffix = path.suffix.lower()
     rel_path = str(path if root.is_file() else path.relative_to(root))
+    normalized_path = rel_path.replace("\\", "/")
 
     for line_number, line in enumerate(text.splitlines(), start=1):
         stripped = line.strip()
@@ -211,6 +214,8 @@ def scan_file(path: Path, root: Path) -> list[Finding]:
             continue
         for rule in RULES:
             if rule.suffixes is not None and suffix not in rule.suffixes:
+                continue
+            if rule.path_pattern is not None and not rule.path_pattern.search(normalized_path):
                 continue
             if rule.pattern.search(line):
                 findings.append(
@@ -268,4 +273,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
